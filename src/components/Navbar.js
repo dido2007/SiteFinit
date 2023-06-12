@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
@@ -6,8 +6,11 @@ import logo from "../Assets/logo.png";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import {CgProfile} from "react-icons/cg" 
+import UserContext from '../UserContext';
+
+
 import {
-  AiFillStar,
+  
   AiOutlineHome,
   AiOutlineFundProjectionScreen,
   AiOutlineUser,
@@ -18,6 +21,10 @@ import { CgFileDocument } from "react-icons/cg";
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
   const [navColour, updateNavbar] = useState(false);
+  const {user} = useContext(UserContext);
+
+  
+  
 
   function scrollHandler() {
     if (window.scrollY >= 20) {
@@ -84,7 +91,7 @@ function NavBar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/project"
+                to="/admin/homepage"
                 onClick={() => updateExpanded(false)}
               >
                 <CgFileDocument style={{ marginBottom: "2px" }} /> Projects
@@ -92,14 +99,14 @@ function NavBar() {
             </Nav.Item>
 
             <Nav.Item className="fork-btn">
-              <Button
-                as={Link}
-                to="/login"
-                onClick={() => updateExpanded(false)}
-              >
-                <CgProfile style={{ fontSize: "1.2em" }} />   Login
-                
-              </Button>
+            <Button
+              as={Link}
+              to="/login"
+              onClick={() => updateExpanded(false)}
+            >
+              <CgProfile style={{ fontSize: "1.2em" }} />   
+              {user ? `${user.first_name} ${user.last_name}` : 'Login'}
+            </Button>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>

@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState , useContext} from 'react';
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import loginImage from "../../../Assets/login.png"; // Notez cette ligne
+import loginImage from "../../../Assets/login.png";
 import '../../../style.css';
-import { Link } from 'react-router-dom';  // Importer le composant Link
+import { Link, useNavigate } from 'react-router-dom';
+import UserContext from '../../../UserContext';  // correct
+
 
 function LoginCard() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // Nouvel état pour les messages d'erreur
+  const [errorMessage, setErrorMessage] = useState('');
   const [restaurant, setRestaurant] = useState('H&H corp');
+  const { setUser } = useContext(UserContext);
 
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,21 +25,41 @@ function LoginCard() {
     const data = { email, password, restaurant };
 
     try {
-      const response = await axios.post('http://localhost:3500/api/auth/login', data);
+      const response = await axios.post('http://localhost:3500/api/auth/login', data, { withCredentials: true });
 
       if (response.data.error) {
-        setErrorMessage(response.data.error); // Mettez à jour le message d'erreur avec la réponse du serveur
+        setErrorMessage(response.data.error);
       } else {
         console.log('Login successfully');
-        setErrorMessage(''); // Effacer le message d'erreur en cas de succès
-        // handle success
+        console.log(document.cookie); // print cookies
+        setErrorMessage('');
+
+        // Récupérer les informations de l'utilisateur
+        fetch('http://localhost:3500/api/auth/namedisplay', {
+          credentials: 'include'  // pour envoyer les cookies avec la requête
+        })
+          .then(response => response.json())
+          .then(data => {
+            // mettre à jour l'état 'user' avec les informations de l'utilisateur
+            setUser(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+
+        // Gérer la redirection en fonction du rôle de l'utilisateur
+        if (response.data.role === 'dev') {
+          navigate('/admin/homepage');
+        } else if (response.data.role === 'client') {
+          navigate('/clientHome');
+        }
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage('An error occurred'); // Mettez à jour le message d'erreur avec une erreur générique
-      // handle error
+      setErrorMessage('An error occurred');
     }
   };
+
 
   return (
     <div>
@@ -42,7 +67,7 @@ function LoginCard() {
       <Card className="projectd-card-view">
         <Card.Body>
           <Card.Title>Login</Card.Title>
-          {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Afficher le message d'erreur s'il existe */}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -57,14 +82,13 @@ function LoginCard() {
                 <Form.Control type="hidden" name="restaurant" value={restaurant} />
             </Form.Group>
 
-
             <Button variant="primary" type="submit">
               Login
             </Button>
-            
+
             <p className="mt-3">
         {/* Remplacer <a> par <Link> */}
-        Doesn't have an account? <Link to="/signup">Signup</Link>  
+        Doesn't have an account? <Link to="/signup">Signup</Link>
       </p>
           </Form>
         </Card.Body>

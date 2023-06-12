@@ -7,6 +7,10 @@ import Projects from "./components/Projects/Projects";
 import Footer from "./components/Footer";
 import Login from "./components/Auth/Login/LoginPage";
 import Signup from "./components/Auth/Signup/SignupPage"
+import AdminHome from './components/Admin/Admin'; // Importez AdminHome ici
+import UserContext from './UserContext';
+
+
 
 import {
   BrowserRouter as Router,
@@ -21,6 +25,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [load, upadateLoad] = useState(true);
+  const [user, setUser] = useState(null);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,22 +37,24 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Preloader load={load} />
-      <div className="App" id={load ? "no-scroll" : "scroll"}>
-        <Navbar />
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
+    <UserContext.Provider value={{ user, setUser }}>
+      <Router>
+        <Preloader load={load} />
+        <div className="App" id={load ? "no-scroll" : "scroll"}>
+          <Navbar />
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/project" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup/>} />
-
+            <Route path="/admin/homepage" element={<AdminHome/>} />
           </Routes>
-        <Footer />
-      </div>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    </UserContext.Provider>
   );
 }
 

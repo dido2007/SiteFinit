@@ -397,6 +397,72 @@ button:focus {
 .icon-colour {
   color: #700c86 !important;
 }
+/* ----------*/
+/* AdminSidebar */
+/*-----------*/
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #333; /* changé en gris */
+  color: white;
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  box-shadow: 0 4px 5px 3px rgba(119, 53, 136, 0.459);
+  padding: 20px;
+  transition: all 0.5s ease 0s;
+}
+
+.admin-sidebar h3 {
+  font-size: 32px; /* augmenter la taille de la police */
+  padding-bottom: 20px;
+}
+
+.admin-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.admin-sidebar ul li {
+  padding: 10px 0;
+  font-size: 24px; /* augmenter la taille de la police */
+
+}
+
+.admin-sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease 0s;
+}
+
+.admin-sidebar ul li a:hover {
+  color: #6d20c5d7;
+  cursor: pointer;
+}
+
+/* Ajoutez des marges pour séparer les sections. */
+.admin-sidebar section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid white; /* ajouté une bordure */
+}
+
+.admin-sidebar section:last-child {
+  border-bottom: none; /* enlever la bordure pour la dernière section */
+}
+
+.admin-sidebar:hover {
+  transform: scale(1.02);
+  overflow: hidden;
+  box-shadow: 0 4px 4px 5px rgba(129, 72, 144, 0.561);
+}
+
+
+
+
 
 /* --------- */
 /* Footer */
